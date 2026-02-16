@@ -12,7 +12,7 @@ app.use(express.json());
 
 const ai = new GoogleGenAI({
 
-apiKey: "AIzaSyATsv_XzK-3hHtikQNy_MHMN2tEe0nrEU4"  
+apiKey: "AIzaSyALoAeTPLuytmK7FrPb7ONhXpNuZY_gPKY"  
 
 });
 // FRONTEND (PRO UI)
@@ -28,6 +28,10 @@ res.send(`
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Anshul AI Assistant</title>
+
+
+
+
 
 <style>
 :root{
@@ -482,10 +486,112 @@ margin-top:2px;
 margin-bottom:10px;
 }
 
+/* CENTER GREETING SCREEN */
+
+.center-screen{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
+opacity:0.9;
+transition:0.3s;
+}
+
+.center-screen.hidden{
+opacity:0;
+pointer-events:none;
+transform:translate(-50%,-60%);
+}
+
+.center-title{
+font-size:28px;
+font-weight:500;
+margin-bottom:10px;
+color:white;
+}
+
+.center-sub{
+font-size:14px;
+color:#9ca3af;
+}
+
+.chat-box{
+position:relative;
+}
+
+
+@media(max-width:600px){
+
+.center-title{
+
+font-size:18px;      /* smaller font on mobile */
+white-space:nowrap;  /* keep in one line */
+max-width:95vw;
+
+}
+
+.center-sub{
+
+font-size:12px;
+
+}
+
+.center-screen{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%, -50%);
+text-align:center;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+width:100%;
+pointer-events:none;
+opacity:0.9;
+transition:all 0.3s ease;
+}
+
+
+}
+.center-title{
+font-size:28px;
+font-weight:500;
+margin-bottom:10px;
+color:white;
+white-space:nowrap;       /* prevent line break */
+max-width:90vw;           /* allow full screen width */
+overflow:hidden;
+text-overflow:ellipsis;   /* optional safety */
+}
+
+.center-title{
+font-size:clamp(18px, 4vw, 28px);
+white-space:nowrap;
+}
+
+
+
 
 
 
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </head>
 <body>
@@ -526,31 +632,21 @@ margin-bottom:10px;
 
 
         <!-- CHAT BOX -->
-        <div id="chat-box" class="chat-box">
+<div id="chat-box" class="chat-box">
 
-        <div class="message bot" id="botGreeting"></div>
+<div id="center-screen" class="center-screen">
 
+<div class="center-title" id="center-text">
+</div>
 
+<div class="center-sub">
+Ask anything to Xai'27
+</div>
 
-        
-    <script>
-        const messages = [
-        "How can I assist you today?",
-        "What can I help you with?",
-        "How may I assist you?",
-        "What would you like to do?",
-        "How can I help?",
-        "Ready to assist you.",
-        "What would you like to work on?"
-];
+</div>
 
-const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+</div>
 
-document.getElementById("botGreeting").innerHTML = randomMessage;
-</script>
-
-
-        </div>
 
 
         <!-- INPUT AREA -->
@@ -570,64 +666,32 @@ document.getElementById("botGreeting").innerHTML = randomMessage;
     </div>
 </div>
 
-function newChat(){
-
-const chatBox = document.getElementById("chat-box");
-
-chatBox.innerHTML = "";
-
-const messages = [
-
-"How can I assist you today?",
-"What can I help you with?",
-"How may I assist you?",
-"What would you like to do?",
-"How can I help?",
-"Ready to assist you.",
-"What would you like to work on?"
-
-];
-
-const randomMessage =
-messages[Math.floor(Math.random()*messages.length)];
-
-const div = document.createElement("div");
-
-div.className = "message bot";
-
-div.id = "botGreeting";
-
-div.innerHTML = randomMessage;
-
-chatBox.appendChild(div);
-
-chatBox.scrollTop = 0;
-
-}
 
 
 <script>
 
-/* ===============================
-GREETING MESSAGES
-=============================== */
 
 const greetingMessages = [
 
+"What can I help with?",
 "How can I assist you today?",
-"What can I help you with?",
-"How may I assist you?",
-"What would you like to do?",
-"How can I help?",
-"Ready to assist you.",
-"What would you like to work on?"
+"Ask me anything.",
+"Ready when you are.",
+"Your AI assistant is here.",
+"How can I help you, Anshul?"
 
 ];
+function showCenterGreeting(){
 
+const text =
+greetingMessages[
+Math.floor(Math.random()*greetingMessages.length)
+];
 
-/* ===============================
-SHOW GREETING FUNCTION
-=============================== */
+document.getElementById("center-text").innerText = text;
+
+}
+
 
 function showGreeting(){
 
@@ -665,9 +729,20 @@ function newChat(){
 const chatBox =
 document.getElementById("chat-box");
 
-chatBox.innerHTML = "";
+// remove only messages, not center-screen
+const messages =
+chatBox.querySelectorAll(".message");
 
-showGreeting();
+messages.forEach(msg => msg.remove());
+
+// show center screen again
+const center =
+document.getElementById("center-screen");
+
+center.classList.remove("hidden");
+
+// show new random greeting
+showCenterGreeting();
 
 chatBox.scrollTop = 0;
 
@@ -713,6 +788,15 @@ text,
 "user"
 );
 
+
+// HIDE CENTER SCREEN
+
+const center =
+document.getElementById("center-screen");
+
+if(center)
+center.classList.add("hidden");
+
 input.value = "";
 
 
@@ -723,6 +807,9 @@ addMessage(
 "bot",
 "typing"
 );
+
+
+
 
 
 try{
@@ -825,9 +912,10 @@ AUTO LOAD GREETING
 window.onload =
 function(){
 
-showGreeting();
+showCenterGreeting();
 
 };
+
 
 </script>
 
