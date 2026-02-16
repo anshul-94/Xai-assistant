@@ -12,7 +12,7 @@ app.use(express.json());
 
 const ai = new GoogleGenAI({
 
-apiKey: "AIzaSyALoAeTPLuytmK7FrPb7ONhXpNuZY_gPKY"  
+apiKey: "AIzaSyCLzaYrXy6277N-qyUTAMa109-f1osXKxU"  
 
 });
 // FRONTEND (PRO UI)
@@ -27,127 +27,86 @@ res.send(`
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Anshul AI Assistant</title>
 
+<title>Anshul AI Assistant</title>
 
 
 
 
 <style>
 :root{
-
 --bg-main:linear-gradient(135deg,#0f0c29,#1a1a2e,#16213e);
-
 --bg-sidebar:#0f0c29;
-
 --bg-chat:rgba(255,255,255,0.05);
-
 --bg-input:rgba(255,255,255,0.07);
-
 --border:rgba(255,255,255,0.08);
-
 --accent:#00f5a0;
-
 --accent-gradient:linear-gradient(45deg,#00f5a0,#00d9f5);
-
 --text:#ffffff;
-
 --text-light:#9ca3af;
-
 --radius:10px;
-
 }
-
 
 /* GLOBAL */
-
-body{
-
+html,body{
 margin:0;
-
 height:100vh;
-
+max-width:100%;
+overflow-x:hidden;
 background:var(--bg-main);
-
 font-family:system-ui,-apple-system,Segoe UI;
-
 color:var(--text);
-
-overflow:hidden;
-
 }
 
+*{
+box-sizing:border-box;
+}
 
 .app{
-
 display:flex;
-
 height:100vh;
-
 width:100%;
-
 }
-
 
 /* SIDEBAR */
-
 .sidebar{
-
 width:260px;
-
 min-width:220px;
-
 background:var(--bg-sidebar);
-
 border-right:1px solid var(--border);
-
 display:flex;
-
 flex-direction:column;
-
 padding:15px;
-
-transition:0.3s;
-
 }
-
 
 .logo{
-
 font-size:20px;
-
 font-weight:700;
-
 margin-bottom:20px;
-
 background:var(--accent-gradient);
-
 -webkit-background-clip:text;
-
 -webkit-text-fill-color:transparent;
-
 }
-
 
 .new-chat{
-
 background:transparent;
-
 border:1px solid var(--border);
-
 color:var(--text);
-
 padding:10px;
-
 border-radius:var(--radius);
-
 cursor:pointer;
-
+margin-top:10px;
+transition:all 0.25s ease; /* smooth animation */
 }
 
+/* HOVER EFFECT */
 .new-chat:hover{
 
-box-shadow:0 0 10px rgba(0,245,160,0.3);
+border-color:#00f5a0;
+
+color:#00f5a0;
+
+box-shadow:0 0 8px rgba(0,245,160,0.4);
 
 }
 
@@ -162,332 +121,159 @@ color:var(--text-light);
 
 cursor:pointer;
 
+transition:all 0.25s ease;
+
+border:1px solid transparent;
+
 }
 
-.chat-item.active{
+/* HOVER EFFECT */
 
-background:rgba(0,245,160,0.15);
+.chat-item:hover{
+
+border-color:#00f5a0;
 
 color:#00f5a0;
 
+box-shadow:0 0 8px rgba(0,245,160,0.4);
+
+background:rgba(0,245,160,0.05);
+
 }
 
+.chat-item.active{
+background:rgba(0,245,160,0.15);
+color:#00f5a0;
+}
 
 .user{
-
 margin-top:auto;
-
 padding-top:15px;
-
 border-top:1px solid var(--border);
-
 color:var(--text-light);
-
 }
-
 
 /* MAIN */
 
 .main{
-
 flex:1;
-
 display:flex;
-
 flex-direction:column;
-
 height:100vh;
-
+overflow:hidden;
 }
-
 
 .header{
-
 padding:15px;
-
 border-bottom:1px solid var(--border);
-
 background:rgba(255,255,255,0.02);
-
 }
-
 
 /* CHAT BOX */
-
 .chat-box{
-
 flex:1;
-
-padding:25px;
-
 overflow-y:auto;
-
+padding:20px;
+padding-bottom:80px;
 display:flex;
-
 flex-direction:column;
-
 gap:12px;
-
+height:0;   /* CRITICAL FIX */
 }
-
 
 /* MESSAGE */
-
 .message{
-
 padding:12px 16px;
-
 border-radius:var(--radius);
-
 max-width:70%;
-
 word-wrap:break-word;
-
-animation:fadeUp 0.25s ease;
-
 }
-
 
 .message.bot{
-
 background:var(--bg-chat);
-
 border:1px solid var(--border);
-
 align-self:flex-start;
-
 }
-
 
 .message.user{
-
 background:var(--accent-gradient);
-
 color:#000;
-
 align-self:flex-end;
-
 }
 
-
-/* INPUT AREA */
+/* INPUT AREA — CLEAN VERSION */
+.input-area{
+position:sticky;
+bottom:0;
+display:flex;
+align-items:center;
+gap:10px;
+padding:12px;
+margin:10px;
+border-top:1px solid var(--border);
+border-radius:12px;
+background:rgba(15,12,41,0.9);
+backdrop-filter:blur(10px);
+transition:all 0.25s ease;
+}
 
 .input-area{
+
+position:sticky;
+bottom:0;
 
 display:flex;
-
-padding:15px;
-
-border-top:1px solid var(--border);
-
-background:rgba(15,12,41,0.8);
-
-}
-
-
-.input-area input{
-
-flex:1;
-
-background:var(--bg-input);
-
-border:none;
-
-outline:none;
+align-items:center;
+gap:10px;
 
 padding:12px;
+margin:10px;
 
-border-radius:var(--radius);
+border:1px solid var(--border);   /* normal border */
 
-color:var(--text);
+border-radius:12px;
 
-}
+background:rgba(15,12,41,0.9);
 
-
-.input-area button{
-
-margin-left:10px;
-
-background:var(--accent-gradient);
-
-border:none;
-
-padding:12px 18px;
-
-border-radius:var(--radius);
-
-cursor:pointer;
-
-color:#000;
-
-font-weight:600;
+transition:border-color 0.25s ease;
 
 }
+.input-area:hover{
 
-
-/* SCROLLBAR */
-
-::-webkit-scrollbar{
-
-width:5px;
+border-color:#00f5a0;   /* highlight border */
 
 }
+.input-area:focus-within{
 
-::-webkit-scrollbar-thumb{
-
-background:var(--accent-gradient);
-
-border-radius:10px;
-
-}
-
-
-/* ANIMATION */
-
-@keyframes fadeUp{
-
-from{
-
-opacity:0;
-
-transform:translateY(10px);
-
-}
-
-to{
-
-opacity:1;
-
-transform:translateY(0);
-
-}
-
-}
-
-
-/* ======================
-TABLET
-====================== */
-
-@media(max-width:900px){
-
-.sidebar{
-
-width:200px;
-
-}
-
-.message{
-
-max-width:85%;
-
-}
-
-}
-
-
-/* ======================
-MOBILE
-====================== */
-
-@media(max-width:700px){
-
-.sidebar{
-
-display:none;
-
-}
-
-.main{
-
-width:100%;
-
-}
-
-.chat-box{
-
-padding:15px;
-
-}
-
-.header{
-
-text-align:center;
-
-}
-
-}
-
-
-/* ======================
-SMALL MOBILE
-====================== */
-
-@media(max-width:480px){
-
-.input-area{
-
-padding:10px;
+border-color:#00f5a0;
 
 }
 
 .input-area input{
-
+flex:1;
+min-width:0;
+background:transparent;
+border:none;
+outline:none;
 padding:10px;
-
-font-size:14px;
-
+border-radius:var(--radius);
+color:var(--text);
+font-size:16px;
 }
 
 .input-area button{
-
-padding:10px;
-
-font-size:14px;
-
+flex-shrink:0;
+background:var(--accent-gradient);
+border:none;
+padding:10px 16px;
+border-radius:var(--radius);
+cursor:pointer;
+color:#000;
+font-weight:600;
+white-space:nowrap;
 }
 
-.message{
-
-font-size:14px;
-
-}
-
-}
-
-
-/* ======================
-LARGE SCREEN
-====================== */
-
-@media(min-width:1400px){
-
-.chat-box{
-
-padding-left:15%;
-
-padding-right:15%;
-
-}
-
-}
-
-
-.logo{
-margin-bottom:15px;
-}
-
-.new-chat{
-margin-bottom:15px;
-}
-
-.chat-history{
-margin-top:2px;
-margin-bottom:10px;
-}
-
-/* CENTER GREETING SCREEN */
-
+/* CENTER GREETING */
 .center-screen{
 position:absolute;
 top:50%;
@@ -496,6 +282,10 @@ transform:translate(-50%,-50%);
 text-align:center;
 opacity:0.9;
 transition:0.3s;
+width:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
 }
 
 .center-screen.hidden{
@@ -505,71 +295,196 @@ transform:translate(-50%,-60%);
 }
 
 .center-title{
-font-size:28px;
+font-size:clamp(18px,4vw,28px);
 font-weight:500;
 margin-bottom:10px;
-color:white;
+white-space:nowrap;
+max-width:90vw;
+overflow:hidden;
+text-overflow:ellipsis;
 }
 
 .center-sub{
 font-size:14px;
 color:#9ca3af;
 }
+/* ================= MOBILE ================= */
 
-.chat-box{
-position:relative;
+@media (max-width:768px){
+
+/* hide sidebar */
+.sidebar{
+display:none;
 }
 
+/* chat spacing so messages not hidden */
+.chat-box{
+padding:15px;
+padding-bottom:100px;
+}
 
-@media(max-width:600px){
+/* floating input container */
+.input-area{
+
+position:fixed;
+
+bottom:10px;
+
+left:10px;
+
+right:10px;
+
+display:flex;
+
+align-items:center;
+
+gap:8px;
+
+padding:8px 10px;
+
+border-radius:14px;
+
+background:rgba(15,12,41,0.95);
+
+border:1px solid var(--border);
+
+box-shadow:0 4px 20px rgba(0,0,0,0.4);
+
+backdrop-filter:blur(12px);
+
+z-index:1000;
+
+}
+
+/* input field responsive */
+.input-area input{
+
+flex:1;
+
+min-width:0;
+
+background:transparent;
+
+border:none;
+
+outline:none;
+
+font-size:16px;
+
+padding:10px;
+
+color:white;
+
+}
+
+/* send button responsive */
+.input-area button{
+
+flex-shrink:0;
+
+padding:10px 16px;
+
+border-radius:10px;
+
+background:var(--accent-gradient);
+
+border:none;
+
+font-weight:600;
+
+}
+
+/* message width */
+.message{
+max-width:85%;
+}
+
+/* center greeting responsive */
+.center-title{
+font-size:clamp(16px,5vw,22px);
+}
+
+}
+
+/* SMALL MOBILE */
+
+@media (max-width:425px){
+
+.input-area input{
+font-size:16px;
+padding:8px;
+}
+
+.input-area button{
+padding:8px 12px;
+font-size:14px;
+}
+
+}
+
+/* VERY SMALL */
+
+@media (max-width:320px){
 
 .center-title{
-
-font-size:18px;      /* smaller font on mobile */
-white-space:nowrap;  /* keep in one line */
-max-width:95vw;
+font-size:15px;
+}
 
 }
 
-.center-sub{
+/* SCROLLBAR */
 
-font-size:12px;
-
+::-webkit-scrollbar{
+width:5px;
 }
+
+::-webkit-scrollbar-thumb{
+background:var(--accent-gradient);
+border-radius:10px;
+}
+
+/* TABLET + MOBILE CENTER FIX */
+
+@media (max-width:1024px){
 
 .center-screen{
+
 position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%, -50%);
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+align-items:center;
+
+transform:none;
+
 text-align:center;
+
+padding:20px;
+
+}
+
+}
+.chat-box{
+flex:1;
+position:relative;
 display:flex;
 flex-direction:column;
-align-items:center;
-justify-content:center;
-width:100%;
-pointer-events:none;
-opacity:0.9;
-transition:all 0.3s ease;
+justify-content:flex-start;
+overflow-y:auto;
 }
 
 
-}
-.center-title{
-font-size:28px;
-font-weight:500;
-margin-bottom:10px;
-color:white;
-white-space:nowrap;       /* prevent line break */
-max-width:90vw;           /* allow full screen width */
-overflow:hidden;
-text-overflow:ellipsis;   /* optional safety */
-}
 
-.center-title{
-font-size:clamp(18px, 4vw, 28px);
-white-space:nowrap;
-}
 
 
 
@@ -577,6 +492,7 @@ white-space:nowrap;
 
 
 </style>
+
 
 
 
@@ -640,7 +556,7 @@ white-space:nowrap;
 </div>
 
 <div class="center-sub">
-Ask anything to Xai'27
+    Ask anything  Anshul AI Assistant is ready to help you
 </div>
 
 </div>
@@ -654,7 +570,7 @@ Ask anything to Xai'27
 
             <input
                 id="input"
-                placeholder="Message Xai'27..."
+                placeholder="Ask Xai'27 anything..."
             >
 
             <button onclick="sendMessage()">
@@ -673,12 +589,14 @@ Ask anything to Xai'27
 
 const greetingMessages = [
 
-"What can I help with?",
-"How can I assist you today?",
-"Ask me anything.",
-"Ready when you are.",
-"Your AI assistant is here.",
-"How can I help you, Anshul?"
+"Hello! How can I help you today?",
+"Welcome! I'm here to help you.",
+"Ask me anything — I'm ready to assist.",
+"How can I make your day easier?",
+"Need help? Just type your question.",
+"Let's get started. How can I assist you?",
+"What would you like to know?",
+"Feel free to ask me anything.",
 
 ];
 function showCenterGreeting(){
