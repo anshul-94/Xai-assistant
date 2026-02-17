@@ -31,6 +31,9 @@ res.send(`
 
 
 
+
+
+
 <style>
 :root{
 --bg-main:linear-gradient(135deg,#0f0c29,#1a1a2e,#16213e);
@@ -48,7 +51,7 @@ res.send(`
 /* GLOBAL */
 html,body{
 margin:0;
-height:100vh;
+height:100dvh;
 max-width:100%;
 overflow-x:hidden;
 background:var(--bg-main);
@@ -62,7 +65,7 @@ box-sizing:border-box;
 
 .app{
 display:flex;
-height:100vh;
+height:100dvh;
 width:100%;
 }
 
@@ -157,8 +160,8 @@ color:var(--text-light);
 flex:1;
 display:flex;
 flex-direction:column;
-height:100vh;
-overflow:hidden;
+height:100%;
+min-height:0;
 }
 
 .header{
@@ -326,11 +329,11 @@ padding-bottom:100px;
 
 position:fixed;
 
-bottom:10px;
+bottom:2px;
 
-left:10px;
+left:5px;
 
-right:10px;
+right:5px;
 
 display:flex;
 
@@ -950,8 +953,6 @@ reply:"Error: "+err.message
 }
 
 });
-
-// START SERVER
 
 app.listen(3001,()=>{
 
