@@ -502,31 +502,66 @@ max-width:85%;
 word-break:break-word;
 }
 
+
+
+/* MOBILE FIX — COMBINED */
+@media(max-width:768px){
+/* chat spacing */
+.chat-box{
+padding:15px;
+padding-bottom:100px; /* space for floating input */
+}
+/* message width */
+.message{
+max-width:85%;
+font-size:15px;
+word-break:break-word;
+}
+/* floating input matching your AI theme */
+.input-area{
+position:fixed;
+
+bottom:12px;
+
+left:12px;
+
+right:12px;
+
+display:flex;
+
+align-items:center;
+
+gap:8px;
+
+padding:10px 12px;
+
+border-radius:20px;
+
+/* YOUR AI THEME BACKGROUND */
+background:linear-gradient(
+135deg,
+rgba(15,12,41,0.95),
+rgba(26,26,46,0.95),
+rgba(22,33,62,0.95)
+);
+
+border:1px solid rgba(0,245,160,0.25);
+
+box-shadow:
+0 4px 20px rgba(0,0,0,0.6),
+0 0 10px rgba(0,245,160,0.15);
+
+backdrop-filter:blur(12px);
+
+z-index:999;
+
+}
+
 }
 
 
 
-
-
-
-
 </style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </head>
 <body>
@@ -948,9 +983,6 @@ Formatting Rules:
 contents: req.body.message
 
 });
-
-
-
 
 
 
