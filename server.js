@@ -570,9 +570,10 @@ overflow-y:auto;
                 placeholder="Ask Xai'27 anything..."
             >
 
-            <button onclick="sendMessage()">
-                Send
-            </button>
+<button onclick="sendMessage(); input.focus();">
+Send
+</button>
+
 
         </div>
 
@@ -713,9 +714,8 @@ if(center)
 center.classList.add("hidden");
 
 input.value = "";
+input.focus();   
 
-
-/* TYPING */
 
 addMessage(
 "Xai'27 is typing...",
