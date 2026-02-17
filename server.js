@@ -18,7 +18,7 @@ apiKey: "AIzaSyCHZB1rQAh_HsBb4UowHhVGG5y2XCjUl5o"
 app.get("/", (req, res) => {
 
 res.send(`
-
+    
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,6 +27,12 @@ res.send(`
 
 
 <title>Anshul AI Assistant</title>
+
+
+
+
+
+
 
 <style>
 :root{
@@ -45,9 +51,9 @@ res.send(`
 /* GLOBAL */
 html,body{
 margin:0;
-
-height:100vh;
-
+height:100dvh;
+max-width:100%;
+overflow-x:hidden;
 background:var(--bg-main);
 font-family:system-ui,-apple-system,Segoe UI;
 color:var(--text);
@@ -59,9 +65,7 @@ box-sizing:border-box;
 
 .app{
 display:flex;
-
-height:100vh;
-
+height:100dvh;
 width:100%;
 }
 
@@ -156,8 +160,9 @@ color:var(--text-light);
 flex:1;
 display:flex;
 flex-direction:column;
-
-height:100vh;
+height:100%;
+min-height:0;
+overflow:hidden;
 
 }
 
@@ -177,6 +182,7 @@ display:flex;
 flex-direction:column;
 gap:12px;
 height:0;   /* CRITICAL FIX */
+min-height:0;     /* IMPORTANT FIX */
 }
 
 /* MESSAGE */
@@ -213,6 +219,8 @@ border-radius:12px;
 background:rgba(15,12,41,0.9);
 backdrop-filter:blur(10px);
 transition:all 0.25s ease;
+flex-shrink:0;      /* IMPORTANT */
+
 }
 
 .input-area{
@@ -253,134 +261,158 @@ min-width:0;
 background:transparent;
 border:none;
 outline:none;
-
-padding:12px;
-
+padding:10px;
 border-radius:var(--radius);
-
 color:var(--text);
+font-size:16px;
+}
+
+.input-area button{
+flex-shrink:0;
+background:var(--accent-gradient);
+border:none;
+padding:10px 16px;
+border-radius:var(--radius);
+cursor:pointer;
+color:#000;
+font-weight:600;
+white-space:nowrap;
+}
+
+/* CENTER GREETING */
+.center-screen{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
+opacity:0.9;
+transition:0.3s;
+width:100%;
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+.center-screen.hidden{
+opacity:0;
+pointer-events:none;
+transform:translate(-50%,-60%);
+}
+
+.center-title{
+font-size:clamp(18px,4vw,28px);
+font-weight:500;
+margin-bottom:10px;
+white-space:nowrap;
+max-width:90vw;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.center-sub{
+font-size:14px;
+color:#9ca3af;
+}
+/* ================= MOBILE ================= */
+
+@media (max-width:768px){
+
+/* hide sidebar */
+.sidebar{
+display:none;
+}
+
+/* chat spacing so messages not hidden */
+.chat-box{
+padding:15px;
+padding-bottom:100px;
+}
+
+/* floating input container */
+.input-area{
+
+position:fixed;
+
+bottom:2px;
+
+left:5px;
+
+right:5px;
+
+display:flex;
+
+align-items:center;
+
+gap:8px;
+
+padding:8px 10px;
+
+border-radius:14px;
+
+background:rgba(15,12,41,0.95);
+
+border:1px solid var(--border);
+
+box-shadow:0 4px 20px rgba(0,0,0,0.4);
+
+backdrop-filter:blur(12px);
+
+z-index:1000;
 
 }
 
+/* input field responsive */
+.input-area input{
 
+flex:1;
+
+min-width:0;
+
+background:transparent;
+
+border:none;
+
+outline:none;
+
+font-size:16px;
+
+padding:10px;
+
+color:white;
+
+}
+
+/* send button responsive */
 .input-area button{
 
-margin-left:10px;
+flex-shrink:0;
+
+padding:10px 16px;
+
+border-radius:10px;
 
 background:var(--accent-gradient);
 
 border:none;
 
-padding:12px 18px;
-
-border-radius:var(--radius);
-
-cursor:pointer;
-
-color:#000;
-
 font-weight:600;
 
 }
 
-
-/* SCROLLBAR */
-
-::-webkit-scrollbar{
-
-width:5px;
-
-}
-
-::-webkit-scrollbar-thumb{
-
-background:var(--accent-gradient);
-
-border-radius:10px;
-
-}
-
-
-/* ANIMATION */
-
-@keyframes fadeUp{
-
-from{
-
-opacity:0;
-
-transform:translateY(10px);
-
-}
-
-to{
-
-opacity:1;
-
-transform:translateY(0);
-
-}
-
-}
-
-
-/* ======================
-TABLET
-====================== */
-
-@media(max-width:900px){
-
-.sidebar{
-
-width:200px;
-
-}
-
+/* message width */
 .message{
-
 max-width:85%;
+}
 
+/* center greeting responsive */
+.center-title{
+font-size:clamp(16px,5vw,22px);
 }
 
 }
 
-
-/* ======================
-MOBILE
-====================== */
-
-@media(max-width:700px){
-
-.sidebar{
-
-display:none;
-
-}
-
-.main{
-
-width:100%;
-
-}
-
-.chat-box{
-
-padding:15px;
-
-}
-
-.header{
-
-text-align:center;
-
-}
-
-}
-
-
-/* ======================
-SMALL MOBILE
-====================== */
+/* SMALL MOBILE */
 
 @media (max-width:425px){
 
@@ -458,9 +490,43 @@ overflow-y:auto;
 }
 
 
+@media(max-width:700px){
+
+.chat-box{
+padding:15px;
+padding-bottom:20px;
+}
+
+.message{
+max-width:85%;
+word-break:break-word;
+}
+
+}
+
+
+
+
+
 
 
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </head>
 <body>
@@ -535,64 +601,34 @@ Send
     </div>
 </div>
 
-function newChat(){
-
-const chatBox = document.getElementById("chat-box");
-
-chatBox.innerHTML = "";
-
-const messages = [
-
-"How can I assist you today?",
-"What can I help you with?",
-"How may I assist you?",
-"What would you like to do?",
-"How can I help?",
-"Ready to assist you.",
-"What would you like to work on?"
-
-];
-
-const randomMessage =
-messages[Math.floor(Math.random()*messages.length)];
-
-const div = document.createElement("div");
-
-div.className = "message bot";
-
-div.id = "botGreeting";
-
-div.innerHTML = randomMessage;
-
-chatBox.appendChild(div);
-
-chatBox.scrollTop = 0;
-
-}
 
 
 <script>
 
-/* ===============================
-GREETING MESSAGES
-=============================== */
 
 const greetingMessages = [
 
-"How can I assist you today?",
-"What can I help you with?",
-"How may I assist you?",
-"What would you like to do?",
-"How can I help?",
-"Ready to assist you.",
-"What would you like to work on?"
+"Hello! How can I help you today?",
+"Welcome! I'm here to help you.",
+"Ask me anything — I'm ready to assist.",
+"How can I make your day easier?",
+"Need help? Just type your question.",
+"Let's get started. How can I assist you?",
+"What would you like to know?",
+"Feel free to ask me anything.",
 
 ];
+function showCenterGreeting(){
 
+const text =
+greetingMessages[
+Math.floor(Math.random()*greetingMessages.length)
+];
 
-/* ===============================
-SHOW GREETING FUNCTION
-=============================== */
+document.getElementById("center-text").innerText = text;
+
+}
+
 
 function showGreeting(){
 
@@ -689,10 +725,18 @@ text,
 "user"
 );
 
+
+// HIDE CENTER SCREEN
+
+const center =
+document.getElementById("center-screen");
+
+if(center)
+center.classList.add("hidden");
+
 input.value = "";
+input.focus();   
 
-
-/* TYPING */
 
 addMessage(
 "Xai'27 is typing...",
