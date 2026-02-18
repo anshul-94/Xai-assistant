@@ -12,7 +12,7 @@ app.use(express.json());
 
 const ai = new GoogleGenAI({
 
-apiKey: "AIzaSyAlbF5PdkNHFWTvyMhEbLySaV51AlzJBI0"
+apiKey: "AIzaSyCP_KZ78IrAUp4oP7agaGHoL8pYS7H5E_4"
 });
 
 app.get("/", (req, res) => {
