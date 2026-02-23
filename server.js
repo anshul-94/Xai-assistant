@@ -24,16 +24,7 @@ res.send(`
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
 <title>Anshul AI Assistant</title>
-
-
-
-
-
-
-
 <style>
 :root{
 --bg-main:linear-gradient(135deg,#0f0c29,#1a1a2e,#16213e);
