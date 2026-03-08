@@ -1,22 +1,17 @@
 import express from "express";
 import cors from "cors";
-import { GoogleGenAI } from "@google/genai";
+import axios from "axios";
+import dotenv from "dotenv";
 
-// SETUP
+dotenv.config();
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
-// GEMINI API
 
-const ai = new GoogleGenAI({
-
-apiKey: "AIzaSyDRtT9310LtZqNTeqnkQLtuXV4-8YVd_tU"
-});
+/* HOME ROUTE */
 
 app.get("/", (req, res) => {
-
 res.send(`
     
 <!DOCTYPE html>
@@ -898,12 +893,17 @@ app.post("/chat", async (req, res) => {
 
 try{
 
-const response = await ai.models.generateContent({
+const userMessage = req.body.message;
 
-model: "gemini-2.5-flash",
+const response = await axios.post(
+"https://openrouter.ai/api/v1/chat/completions",
+{
+model: "openai/gpt-4o-mini",
 
-config: {
-systemInstruction: `
+messages: [
+{
+role: "system",
+content: `
 You are Xai'27, an AI assistant created by Anshul.
 
 Identity Rules:
@@ -941,9 +941,6 @@ Examples:
 
 This rule applies to ALL recommendation cases including YouTube channels, courses, tools, careers, resources, or any suggestions.
 
-
-
-
 Language Rules:
 - Reply in EXACT same language as user.
 - Hinglish → Hinglish
@@ -956,8 +953,6 @@ Behavior Rules:
 - Keep answers short and natural.
 - Sound like a friendly human assistant.
 
-
-
 Identity:
 - Your name is Xai.
 - You are an AI assistant, not Google.
@@ -969,35 +964,44 @@ Formatting Rules:
 - Use numbered lists when giving multiple items.
 `
 },
+{
+role: "user",
+content: userMessage
+}
+]
 
+},
+{
+headers: {
+Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+"Content-Type": "application/json",
+"HTTP-Referer": "http://localhost:3001",
+"X-Title": "Xai27 Assistant"
+}
+}
+);
 
-contents: req.body.message
-
-});
-
-
+const reply =
+response.data?.choices?.[0]?.message?.content || "No response";
 
 res.json({
-
-reply:response.text
-
+reply
 });
 
 }catch(err){
 
+console.error(err.response?.data || err.message);
+
 res.json({
-
-reply:"Error: "+err.message
-
-});
+reply: "Server error. Please try again."});
 
 }
 
 });
-
 app.listen(3001,()=>{
 
 console.log("AI Agent running at:");
 console.log("http://localhost:3001");
+console.log(process.env.OPENROUTER_API_KEY);
 
 });
