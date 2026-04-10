@@ -22,6 +22,8 @@ async def serve_home():
 
 @app.post("/chat")
 async def chat_endpoint(data: ChatRequest):
+    if data.message.lower() == "ping":
+        return {"reply": "pong"}
     try:
         reply = chat_llm(data.message)
         return {"reply": reply}
