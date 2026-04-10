@@ -1,11 +1,11 @@
-const http = require('https');
+const https = require('https');
 
 const data = JSON.stringify({
   message: 'ping'
 });
 
 const options = {
-  hostname: 'your-app-name.onrender.com',
+  hostname: 'xai-assistant-1.onrender.com',
   path: '/chat',
   method: 'POST',
   headers: {
@@ -14,15 +14,16 @@ const options = {
   }
 };
 
-const req = http.request(options, (res) => {
+const req = https.request(options, (res) => {
   console.log(`Status Code: ${res.statusCode}`);
+
   res.on('data', (d) => {
     process.stdout.write(d);
   });
 });
 
 req.on('error', (error) => {
-  console.error(error);
+  console.error('Error:', error);
 });
 
 req.write(data);

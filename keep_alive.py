@@ -1,7 +1,7 @@
 import requests
 
 def keep_alive():
-    url = "https://your-app-name.onrender.com/chat"
+    url = "https://xai-assistant-1.onrender.com/chat"
     payload = {"message": "ping"}
     try:
         response = requests.post(url, json=payload)
